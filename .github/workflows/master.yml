@@ -50,3 +50,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+            SUPABASE_PUBLIC_KEY=${{ secrets.SUPABASE_PUBLIC_KEY }}
+            SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
