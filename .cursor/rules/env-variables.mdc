@@ -1,0 +1,8 @@
+---
+description: Where to find definition of environment variables
+globs: *.astro, *.ts
+---
+
+# Your rule content
+
+- When injecting or creating new environment variables, always rely on src/env.d.ts - [env.d.ts](mdc:src/env.d.ts)

@@ -1,0 +1,47 @@
+---
+import "../styles/global.css";
+import Layout from "../layouts/Layout.astro";
+import {verifyAuth} from "../lib/cookieAuth";
+
+const {cookies, redirect} = Astro;
+const {user, error} = await verifyAuth(cookies);
+
+if (error || !user) {
+  return redirect("/");
+}
+---
+
+<Layout>
+  <main class='container mx-auto px-4 py-8'>
+    <div class='max-w-2xl mx-auto'>
+      <h1 class='text-4xl font-bold mb-6'>
+        Hello, {user.email}!
+      </h1>
+      <p class='text-gray-600 mb-4'>Welcome to your personal dashboard.</p>
+      <button
+        id='signout'
+        class='bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors'
+      >
+        Sign Out
+      </button>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // Client-side logout handler
+  const signoutButton = document.getElementById("signout");
+  signoutButton?.addEventListener("click", async () => {
+    try {
+      const response = await fetch("/api/auth/signout", {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        window.location.href = "/";
+      }
+    } catch (error) {
+      console.error("Failed to sign out:", error);
+    }
+  });
+</script>
