@@ -9,6 +9,7 @@ import svelte from "@astrojs/svelte";
 // https://astro.build/config
 export default defineConfig({
   output: "server",
+  site: "https://sea-lion-app-y4gmq.ondigitalocean.app",
   server: {
     port: process.env.PORT ? parseInt(process.env.PORT) : 3000,
   },

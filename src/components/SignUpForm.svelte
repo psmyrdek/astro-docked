@@ -23,6 +23,7 @@
   let confirmPassword = $state("123456");
   let error = $state<string | null>(null);
   let isLoading = $state(false);
+  let isSuccess = $state(false);
 
   // Derived validation states using the new $derived rune
   let isEmailValid = $derived(email.includes("@") && email.includes("."));
@@ -53,16 +54,14 @@
         throw new Error(data.error || "Signup failed");
       }
 
-      // Clear form
+      // Clear form and show success message
       email = "";
       password = "";
       confirmPassword = "";
+      isSuccess = true;
 
       // Notify parent of success with proper typing
       onSignUpSuccess?.(data);
-
-      // Redirect to home page
-      window.location.href = "/home";
     } catch (e) {
       error = e instanceof Error ? e.message : "An unknown error occurred";
     } finally {
@@ -85,93 +84,104 @@
     </div>
   {/if}
 
-  <div class="mb-4">
-    <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
-      Email
-    </label>
-    <input
-      type="email"
-      id="email"
-      bind:value={email}
-      class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-      placeholder="you@example.com"
-      required
-      aria-invalid={email ? !isEmailValid : undefined}
-      aria-describedby={email && !isEmailValid ? "email-error" : undefined}
-    />
-    {#if email && !isEmailValid}
-      <p id="email-error" class="mt-1 text-sm text-red-600" role="alert">
-        Please enter a valid email address
+  {#if isSuccess}
+    <div class="mb-4 p-3 bg-green-100 text-green-700 rounded" role="alert">
+      <p class="font-medium">Account created successfully!</p>
+      <p class="mt-1">
+        Please check your email for a confirmation link to activate your
+        account.
       </p>
-    {/if}
-  </div>
+    </div>
+  {:else}
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+        Email
+      </label>
+      <input
+        type="email"
+        id="email"
+        bind:value={email}
+        class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="you@example.com"
+        required
+        aria-invalid={email ? !isEmailValid : undefined}
+        aria-describedby={email && !isEmailValid ? "email-error" : undefined}
+      />
+      {#if email && !isEmailValid}
+        <p id="email-error" class="mt-1 text-sm text-red-600" role="alert">
+          Please enter a valid email address
+        </p>
+      {/if}
+    </div>
 
-  <div class="mb-4">
-    <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-      Password
-    </label>
-    <input
-      type="password"
-      id="password"
-      bind:value={password}
-      class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-      placeholder="••••••••"
-      required
-      aria-invalid={password ? !isPasswordValid : undefined}
-      aria-describedby={password && !isPasswordValid
-        ? "password-error"
-        : undefined}
-    />
-    {#if password && !isPasswordValid}
-      <p id="password-error" class="mt-1 text-sm text-red-600" role="alert">
-        Password must be at least 6 characters
-      </p>
-    {/if}
-  </div>
+    <div class="mb-4">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+        Password
+      </label>
+      <input
+        type="password"
+        id="password"
+        bind:value={password}
+        class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="••••••••"
+        required
+        aria-invalid={password ? !isPasswordValid : undefined}
+        aria-describedby={password && !isPasswordValid
+          ? "password-error"
+          : undefined}
+      />
+      {#if password && !isPasswordValid}
+        <p id="password-error" class="mt-1 text-sm text-red-600" role="alert">
+          Password must be at least 6 characters
+        </p>
+      {/if}
+    </div>
 
-  <div class="mb-6">
-    <label
-      class="block text-gray-700 text-sm font-bold mb-2"
-      for="confirm-password"
-    >
-      Confirm Password
-    </label>
-    <input
-      type="password"
-      id="confirm-password"
-      bind:value={confirmPassword}
-      class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-      placeholder="••••••••"
-      required
-      aria-invalid={confirmPassword ? !doPasswordsMatch : undefined}
-      aria-describedby={confirmPassword && !doPasswordsMatch
-        ? "confirm-password-error"
-        : undefined}
-    />
-    {#if confirmPassword && !doPasswordsMatch}
-      <p
-        id="confirm-password-error"
-        class="mt-1 text-sm text-red-600"
-        role="alert"
+    <div class="mb-6">
+      <label
+        class="block text-gray-700 text-sm font-bold mb-2"
+        for="confirm-password"
       >
-        Passwords do not match
-      </p>
-    {/if}
-  </div>
+        Confirm Password
+      </label>
+      <input
+        type="password"
+        id="confirm-password"
+        bind:value={confirmPassword}
+        class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="••••••••"
+        required
+        aria-invalid={confirmPassword ? !doPasswordsMatch : undefined}
+        aria-describedby={confirmPassword && !doPasswordsMatch
+          ? "confirm-password-error"
+          : undefined}
+      />
+      {#if confirmPassword && !doPasswordsMatch}
+        <p
+          id="confirm-password-error"
+          class="mt-1 text-sm text-red-600"
+          role="alert"
+        >
+          Passwords do not match
+        </p>
+      {/if}
+    </div>
 
-  <button
-    type="submit"
-    disabled={!canSubmit}
-    class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 transition-colors"
-    aria-busy={isLoading}
-  >
-    {#if isLoading}
-      <span class="inline-block animate-spin mr-2" aria-hidden="true">⌛</span>
-      Signing up...
-    {:else}
-      Sign Up
-    {/if}
-  </button>
+    <button
+      type="submit"
+      disabled={!canSubmit}
+      class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 transition-colors"
+      aria-busy={isLoading}
+    >
+      {#if isLoading}
+        <span class="inline-block animate-spin mr-2" aria-hidden="true">⌛</span
+        >
+        Signing up...
+      {:else}
+        Sign Up
+      {/if}
+    </button>
+  {/if}
 </form>
 
 <style>
