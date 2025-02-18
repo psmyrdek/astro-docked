@@ -10,6 +10,7 @@
     };
     message: string;
     error?: string;
+    isExistingAccount?: boolean;
   }
 
   interface Props extends HTMLFormAttributes {
@@ -24,6 +25,7 @@
   let error = $state<string | null>(null);
   let isLoading = $state(false);
   let isSuccess = $state(false);
+  let isExistingAccount = $state(false);
 
   // Derived validation states using the new $derived rune
   let isEmailValid = $derived(email.includes("@") && email.includes("."));
@@ -51,6 +53,12 @@
       const data = (await response.json()) as SignUpResponse;
 
       if (!response.ok) {
+        if (data.isExistingAccount) {
+          isExistingAccount = true;
+          throw new Error(
+            "An account with this email already exists. Please try logging in instead."
+          );
+        }
         throw new Error(data.error || "Signup failed");
       }
 
@@ -59,6 +67,7 @@
       password = "";
       confirmPassword = "";
       isSuccess = true;
+      isExistingAccount = false;
 
       // Notify parent of success with proper typing
       onSignUpSuccess?.(data);
@@ -79,7 +88,12 @@
   <h2 class="text-2xl font-bold mb-6 text-gray-800">Create Account</h2>
 
   {#if error}
-    <div class="mb-4 p-3 bg-red-100 text-red-700 rounded" role="alert">
+    <div
+      class="mb-4 p-3 {isExistingAccount
+        ? 'bg-yellow-100 text-yellow-700'
+        : 'bg-red-100 text-red-700'} rounded"
+      role="alert"
+    >
       {error}
     </div>
   {/if}

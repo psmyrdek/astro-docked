@@ -41,7 +41,26 @@ export const POST: APIRoute = async ({request, cookies}) => {
       );
     }
 
-    // Set the session cookies
+    // Check if the user already exists (Supabase returns user with identities = [] for existing users)
+    if (
+      authData.user &&
+      (!authData.user.identities || authData.user.identities.length === 0)
+    ) {
+      return new Response(
+        JSON.stringify({
+          error: "An account with this email already exists",
+          isExistingAccount: true,
+        }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    // Set the session cookies only for new successful signups
     if (authData.session) {
       cookies.set("sb-access-token", authData.session.access_token, {
         path: "/",
@@ -63,7 +82,8 @@ export const POST: APIRoute = async ({request, cookies}) => {
     return new Response(
       JSON.stringify({
         user: authData.user,
-        message: "Successfully signed up!",
+        message:
+          "Successfully signed up! Please check your email to confirm your account.",
       }),
       {
         status: 200,

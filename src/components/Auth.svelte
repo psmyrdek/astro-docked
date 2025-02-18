@@ -3,6 +3,7 @@
   import type {HTMLAttributes} from "svelte/elements";
   import SignInForm from "./SignInForm.svelte";
   import SignUpForm from "./SignUpForm.svelte";
+  import AuthError from "./AuthError.svelte";
   import type {SignInResponse} from "./SignInForm.svelte";
   import type {SignUpResponse} from "./SignUpForm.svelte";
 
@@ -20,6 +21,8 @@
 </script>
 
 <div {...containerProps} class="auth-container {containerProps.class ?? ''}">
+  <AuthError />
+
   {#if isSignIn}
     <SignInForm onSignInSuccess={onAuthSuccess} />
   {:else}
