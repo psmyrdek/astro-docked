@@ -1,5 +1,5 @@
 <script lang="ts">
-  let pathname = $state("");
+  let pathname = $state('');
 
   // Update pathname on mount and when navigation occurs
   $effect(() => {
@@ -10,8 +10,8 @@
       pathname = window.location.pathname;
     };
 
-    window.addEventListener("popstate", handleNavigation);
-    return () => window.removeEventListener("popstate", handleNavigation);
+    window.addEventListener('popstate', handleNavigation);
+    return () => window.removeEventListener('popstate', handleNavigation);
   });
 </script>
 
@@ -27,9 +27,9 @@
             <a
               href="/home"
               class={`${
-                pathname === "/home"
-                  ? "bg-gray-900 text-white"
-                  : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                pathname === '/home'
+                  ? 'bg-gray-900 text-white'
+                  : 'text-gray-300 hover:bg-gray-700 hover:text-white'
               } rounded-md px-3 py-2 text-sm font-medium`}
             >
               Dashboard
@@ -37,9 +37,9 @@
             <a
               href="/admin"
               class={`${
-                pathname === "/admin"
-                  ? "bg-gray-900 text-white"
-                  : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                pathname === '/admin'
+                  ? 'bg-gray-900 text-white'
+                  : 'text-gray-300 hover:bg-gray-700 hover:text-white'
               } rounded-md px-3 py-2 text-sm font-medium`}
             >
               Users
@@ -56,9 +56,9 @@
       <a
         href="/home"
         class={`${
-          pathname === "/home"
-            ? "bg-gray-900 text-white"
-            : "text-gray-300 hover:bg-gray-700 hover:text-white"
+          pathname === '/home'
+            ? 'bg-gray-900 text-white'
+            : 'text-gray-300 hover:bg-gray-700 hover:text-white'
         } block rounded-md px-3 py-2 text-base font-medium`}
       >
         Dashboard
@@ -66,9 +66,9 @@
       <a
         href="/admin"
         class={`${
-          pathname === "/admin"
-            ? "bg-gray-900 text-white"
-            : "text-gray-300 hover:bg-gray-700 hover:text-white"
+          pathname === '/admin'
+            ? 'bg-gray-900 text-white'
+            : 'text-gray-300 hover:bg-gray-700 hover:text-white'
         } block rounded-md px-3 py-2 text-base font-medium`}
       >
         Users

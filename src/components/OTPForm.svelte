@@ -1,6 +1,6 @@
 <!-- A modern OTP verification form component using Svelte 5 runes -->
 <script lang="ts">
-  import type {HTMLFormAttributes} from "svelte/elements";
+  import type { HTMLFormAttributes } from 'svelte/elements';
 
   export interface OTPVerifyResponse {
     user: {
@@ -18,9 +18,9 @@
     token?: string;
   }
 
-  let {onVerifySuccess, email, token, ...formProps}: Props = $props();
+  let { onVerifySuccess, email, token, ...formProps }: Props = $props();
 
-  let otp = $state(token ?? "");
+  let otp = $state(token ?? '');
   let error = $state<string | null>(null);
   let isLoading = $state(false);
   let isSuccess = $state(false);
@@ -35,27 +35,27 @@
     isLoading = true;
 
     try {
-      const response = await fetch("/api/auth/token-verify", {
-        method: "POST",
+      const response = await fetch('/api/auth/token-verify', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({token: otp, email}),
+        body: JSON.stringify({ token: otp, email }),
       });
 
       const data = (await response.json()) as OTPVerifyResponse;
 
       if (!response.ok) {
-        throw new Error(data.error || "Verification failed");
+        throw new Error(data.error || 'Verification failed');
       }
 
       // Clear form and show success message
-      otp = "";
+      otp = '';
       isSuccess = true;
 
-      window.location.href = "/home";
+      window.location.href = '/home';
     } catch (e) {
-      error = e instanceof Error ? e.message : "An unknown error occurred";
+      error = e instanceof Error ? e.message : 'An unknown error occurred';
     } finally {
       isLoading = false;
     }
@@ -102,7 +102,7 @@
         maxlength="6"
         required
         aria-invalid={otp ? !isOTPValid : undefined}
-        aria-describedby={otp && !isOTPValid ? "otp-error" : undefined}
+        aria-describedby={otp && !isOTPValid ? 'otp-error' : undefined}
       />
       {#if otp && !isOTPValid}
         <p id="otp-error" class="mt-1 text-sm text-red-600" role="alert">

@@ -1,28 +1,28 @@
-import type {APIRoute} from "astro";
-import {supabaseAdmin} from "../../../lib/supabase";
+import type { APIRoute } from 'astro';
+import { supabaseAdmin } from '../../../lib/supabase';
 
-export const POST: APIRoute = async ({request, cookies}) => {
+export const POST: APIRoute = async ({ request, cookies }) => {
   try {
     const data = await request.json();
-    const {email, password} = data;
+    const { email, password } = data;
 
     // Validate input
     if (!email || !password) {
       return new Response(
         JSON.stringify({
-          error: "Email and password are required",
+          error: 'Email and password are required',
         }),
         {
           status: 400,
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         }
       );
     }
 
     // Sign up the user
-    const {data: authData, error} = await supabaseAdmin.auth.signUp({
+    const { data: authData, error } = await supabaseAdmin.auth.signUp({
       email,
       password,
     });
@@ -35,7 +35,7 @@ export const POST: APIRoute = async ({request, cookies}) => {
         {
           status: 400,
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         }
       );
@@ -48,13 +48,13 @@ export const POST: APIRoute = async ({request, cookies}) => {
     ) {
       return new Response(
         JSON.stringify({
-          error: "An account with this email already exists",
+          error: 'An account with this email already exists',
           isExistingAccount: true,
         }),
         {
           status: 400,
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         }
       );
@@ -62,19 +62,19 @@ export const POST: APIRoute = async ({request, cookies}) => {
 
     // Set the session cookies only for new successful signups
     if (authData.session) {
-      cookies.set("sb-access-token", authData.session.access_token, {
-        path: "/",
+      cookies.set('sb-access-token', authData.session.access_token, {
+        path: '/',
         httpOnly: true,
         secure: import.meta.env.PROD,
-        sameSite: "strict",
+        sameSite: 'strict',
         maxAge: 60 * 60 * 24 * 7, // 1 week
       });
 
-      cookies.set("sb-refresh-token", authData.session.refresh_token, {
-        path: "/",
+      cookies.set('sb-refresh-token', authData.session.refresh_token, {
+        path: '/',
         httpOnly: true,
         secure: import.meta.env.PROD,
-        sameSite: "strict",
+        sameSite: 'strict',
         maxAge: 60 * 60 * 24 * 7, // 1 week
       });
     }
@@ -83,24 +83,24 @@ export const POST: APIRoute = async ({request, cookies}) => {
       JSON.stringify({
         user: authData.user,
         message:
-          "Successfully signed up! Please check your email to confirm your account.",
+          'Successfully signed up! Please check your email to confirm your account.',
       }),
       {
         status: 200,
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       }
     );
   } catch (error) {
     return new Response(
       JSON.stringify({
-        error: "Internal server error",
+        error: 'Internal server error',
       }),
       {
         status: 500,
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       }
     );

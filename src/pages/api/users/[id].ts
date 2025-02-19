@@ -1,93 +1,93 @@
-import type {APIRoute} from "astro";
-import {supabase, supabaseAdmin} from "../../../lib/supabase";
+import type { APIRoute } from 'astro';
+import { supabase, supabaseAdmin } from '../../../lib/supabase';
 
-export const DELETE: APIRoute = async ({params}) => {
-  const {id} = params;
+export const DELETE: APIRoute = async ({ params }) => {
+  const { id } = params;
 
   if (!id) {
     return new Response(
       JSON.stringify({
-        message: "User ID is required",
+        message: 'User ID is required',
       }),
-      {status: 400}
+      { status: 400 }
     );
   }
 
   try {
-    const {error} = await supabaseAdmin.auth.admin.deleteUser(id);
+    const { error } = await supabaseAdmin.auth.admin.deleteUser(id);
 
     if (error) {
       return new Response(
         JSON.stringify({
-          message: "Error deleting user",
+          message: 'Error deleting user',
           error: error.message,
         }),
-        {status: 500}
+        { status: 500 }
       );
     }
 
-    return new Response(null, {status: 204});
+    return new Response(null, { status: 204 });
   } catch (error) {
     return new Response(
       JSON.stringify({
-        message: "Server error",
-        error: error instanceof Error ? error.message : "Unknown error",
+        message: 'Server error',
+        error: error instanceof Error ? error.message : 'Unknown error',
       }),
-      {status: 500}
+      { status: 500 }
     );
   }
 };
 
-export const GET: APIRoute = async ({params}) => {
-  const {id} = params;
+export const GET: APIRoute = async ({ params }) => {
+  const { id } = params;
 
   if (!id) {
     return new Response(
       JSON.stringify({
-        message: "User ID is required",
+        message: 'User ID is required',
       }),
-      {status: 400}
+      { status: 400 }
     );
   }
 
   try {
     const {
-      data: {user},
+      data: { user },
       error,
     } = await supabaseAdmin.auth.admin.getUserById(id);
 
     if (error) {
       return new Response(
         JSON.stringify({
-          message: "Error fetching user",
+          message: 'Error fetching user',
           error: error.message,
         }),
-        {status: 500}
+        { status: 500 }
       );
     }
 
     if (!user) {
       return new Response(
         JSON.stringify({
-          message: "User not found",
+          message: 'User not found',
         }),
-        {status: 404}
+        { status: 404 }
       );
     }
 
     return new Response(JSON.stringify(user), {
       status: 200,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
   } catch (error) {
     return new Response(
       JSON.stringify({
-        message: "Server error",
-        error: error instanceof Error ? error.message : "Unknown error",
+        message: 'Server error',
+        error: error instanceof Error ? error.message : 'Unknown error',
       }),
-      {status: 500}
+      { status: 500 }
     );
   }
 };

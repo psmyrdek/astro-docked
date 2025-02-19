@@ -9,7 +9,7 @@
     currentUserEmail: string;
   }
 
-  let {currentUserEmail}: Props = $props();
+  let { currentUserEmail }: Props = $props();
   let users = $state<User[]>([]);
   let loading = $state(true);
   let error = $state<string | null>(null);
@@ -18,11 +18,11 @@
     try {
       loading = true;
       error = null;
-      const response = await fetch("/api/users");
-      if (!response.ok) throw new Error("Failed to fetch users");
+      const response = await fetch('/api/users');
+      if (!response.ok) throw new Error('Failed to fetch users');
       users = await response.json();
     } catch (e) {
-      error = e instanceof Error ? e.message : "Failed to fetch users";
+      error = e instanceof Error ? e.message : 'Failed to fetch users';
     } finally {
       loading = false;
     }
@@ -31,15 +31,15 @@
   async function deleteUser(id: string) {
     try {
       const response = await fetch(`/api/users/${id}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
 
-      if (!response.ok) throw new Error("Failed to delete user");
+      if (!response.ok) throw new Error('Failed to delete user');
 
       // Remove user from the list
       users = users.filter((user) => user.id !== id);
     } catch (e) {
-      error = e instanceof Error ? e.message : "Failed to delete user";
+      error = e instanceof Error ? e.message : 'Failed to delete user';
     }
   }
 
@@ -101,8 +101,8 @@
                   class="text-red-600 hover:text-red-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={user.email === currentUserEmail}
                   title={user.email === currentUserEmail
-                    ? "You cannot delete your own account"
-                    : "Delete user"}
+                    ? 'You cannot delete your own account'
+                    : 'Delete user'}
                 >
                   Delete
                 </button>

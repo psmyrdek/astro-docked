@@ -1,13 +1,13 @@
 <!-- A component for displaying authentication errors from URL parameters -->
 <script lang="ts">
-  import {onMount} from "svelte";
-  import type {HTMLAttributes} from "svelte/elements";
+  import { onMount } from 'svelte';
+  import type { HTMLAttributes } from 'svelte/elements';
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
     message?: string;
   }
 
-  let {message}: Props = $props();
+  let { message }: Props = $props();
 
   interface AuthErrorMapping {
     [key: string]: {
@@ -19,12 +19,12 @@
   // Error mappings for known error codes
   const ERROR_MAPPINGS: AuthErrorMapping = {
     otp_expired: {
-      title: "Link Expired",
+      title: 'Link Expired',
       description:
-        "The email confirmation link has expired. Please request a new one.",
+        'The email confirmation link has expired. Please request a new one.',
     },
     access_denied: {
-      title: "Access Denied",
+      title: 'Access Denied',
       description: "You don't have permission to access this resource.",
     },
     // Add more error mappings as needed
@@ -37,11 +37,11 @@
 
   function parseUrlErrors() {
     const searchParams = new URLSearchParams(window.location.search);
-    error = searchParams.get("error");
-    errorCode = searchParams.get("error_code");
-    const rawDescription = searchParams.get("error_description");
+    error = searchParams.get('error');
+    errorCode = searchParams.get('error_code');
+    const rawDescription = searchParams.get('error_description');
     errorDescription = rawDescription
-      ? rawDescription.replace(/\+/g, " ")
+      ? rawDescription.replace(/\+/g, ' ')
       : null;
 
     // Only show if there are actual errors
@@ -62,10 +62,10 @@
   let errorDetails = $derived(
     errorCode
       ? ERROR_MAPPINGS[errorCode] || {
-          title: "Error",
-          description: errorDescription || "An unknown error occurred",
+          title: 'Error',
+          description: errorDescription || 'An unknown error occurred',
         }
-      : null
+      : null,
   );
 
   onMount(() => {
@@ -104,7 +104,7 @@
       <p class="text-red-700">{errorDetails.description}</p>
     {:else}
       <p class="text-red-700">
-        {errorDescription || "An unknown error occurred"}
+        {errorDescription || 'An unknown error occurred'}
       </p>
     {/if}
   </div>

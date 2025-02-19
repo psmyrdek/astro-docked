@@ -1,6 +1,6 @@
 <!-- A modern signup form component using Svelte 5 runes -->
 <script lang="ts">
-  import type {HTMLFormAttributes} from "svelte/elements";
+  import type { HTMLFormAttributes } from 'svelte/elements';
 
   export interface SignUpResponse {
     user: {
@@ -17,22 +17,22 @@
     onSignUpSuccess?: (data: SignUpResponse) => void;
   }
 
-  let {onSignUpSuccess, ...formProps}: Props = $props();
+  let { onSignUpSuccess, ...formProps }: Props = $props();
 
-  let email = $state("przemek.smyrdek@gmail.com");
-  let password = $state("123456");
-  let confirmPassword = $state("123456");
+  let email = $state('');
+  let password = $state('');
+  let confirmPassword = $state('');
   let error = $state<string | null>(null);
   let isLoading = $state(false);
   let isSuccess = $state(false);
   let isExistingAccount = $state(false);
 
   // Derived validation states using the new $derived rune
-  let isEmailValid = $derived(email.includes("@") && email.includes("."));
+  let isEmailValid = $derived(email.includes('@') && email.includes('.'));
   let isPasswordValid = $derived(password.length >= 6);
   let doPasswordsMatch = $derived(password === confirmPassword);
   let canSubmit = $derived(
-    isEmailValid && isPasswordValid && doPasswordsMatch && !isLoading
+    isEmailValid && isPasswordValid && doPasswordsMatch && !isLoading,
   );
 
   // Using the new event handler type
@@ -42,12 +42,12 @@
     isLoading = true;
 
     try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({email, password}),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = (await response.json()) as SignUpResponse;
@@ -56,23 +56,23 @@
         if (data.isExistingAccount) {
           isExistingAccount = true;
           throw new Error(
-            "An account with this email already exists. Please try logging in instead."
+            'An account with this email already exists. Please try logging in instead.',
           );
         }
-        throw new Error(data.error || "Signup failed");
+        throw new Error(data.error || 'Signup failed');
       }
 
       // Clear form and show success message
-      email = "";
-      password = "";
-      confirmPassword = "";
+      email = '';
+      password = '';
+      confirmPassword = '';
       isSuccess = true;
       isExistingAccount = false;
 
       // Notify parent of success with proper typing
       onSignUpSuccess?.(data);
     } catch (e) {
-      error = e instanceof Error ? e.message : "An unknown error occurred";
+      error = e instanceof Error ? e.message : 'An unknown error occurred';
     } finally {
       isLoading = false;
     }
@@ -119,7 +119,7 @@
         placeholder="you@example.com"
         required
         aria-invalid={email ? !isEmailValid : undefined}
-        aria-describedby={email && !isEmailValid ? "email-error" : undefined}
+        aria-describedby={email && !isEmailValid ? 'email-error' : undefined}
       />
       {#if email && !isEmailValid}
         <p id="email-error" class="mt-1 text-sm text-red-600" role="alert">
@@ -141,7 +141,7 @@
         required
         aria-invalid={password ? !isPasswordValid : undefined}
         aria-describedby={password && !isPasswordValid
-          ? "password-error"
+          ? 'password-error'
           : undefined}
       />
       {#if password && !isPasswordValid}
@@ -167,7 +167,7 @@
         required
         aria-invalid={confirmPassword ? !doPasswordsMatch : undefined}
         aria-describedby={confirmPassword && !doPasswordsMatch
-          ? "confirm-password-error"
+          ? 'confirm-password-error'
           : undefined}
       />
       {#if confirmPassword && !doPasswordsMatch}

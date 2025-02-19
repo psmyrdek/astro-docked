@@ -1,8 +1,8 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Auth from "../components/Auth.svelte";
-import type {SignInResponse} from "../components/SignInForm.svelte";
-import type {SignUpResponse} from "../components/SignUpForm.svelte";
+import Layout from '../layouts/Layout.astro';
+import Auth from '../components/Auth.svelte';
+import type {SignInResponse} from '../components/SignInForm.svelte';
+import type {SignUpResponse} from '../components/SignUpForm.svelte';
 ---
 
 <Layout showTopBar={false}>
@@ -12,7 +12,7 @@ import type {SignUpResponse} from "../components/SignUpForm.svelte";
     <Auth
       client:load
       onAuthSuccess={(data: SignInResponse | SignUpResponse) => {
-        console.log("User authenticated:", data.user);
+        console.log('User authenticated:', data.user);
       }}
     />
   </main>

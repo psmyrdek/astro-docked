@@ -1,13 +1,13 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import UserList from "../components/UserList.svelte";
-import {verifyAuth} from "../lib/cookieAuth";
+import Layout from '../layouts/Layout.astro';
+import UserList from '../components/UserList.svelte';
+import {verifyAuth} from '../lib/cookieAuth';
 
 const {cookies, redirect} = Astro;
 const {user, error} = await verifyAuth(cookies);
 
 if (error || !user) {
-  return redirect("/");
+  return redirect('/');
 }
 ---
 

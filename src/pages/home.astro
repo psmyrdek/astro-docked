@@ -1,12 +1,12 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import {verifyAuth} from "../lib/cookieAuth";
+import Layout from '../layouts/Layout.astro';
+import {verifyAuth} from '../lib/cookieAuth';
 
 const {cookies, redirect} = Astro;
 const {user, error} = await verifyAuth(cookies);
 
 if (error || !user) {
-  return redirect("/");
+  return redirect('/');
 }
 ---
 
@@ -29,18 +29,18 @@ if (error || !user) {
 
 <script>
   // Client-side logout handler
-  const signoutButton = document.getElementById("signout");
-  signoutButton?.addEventListener("click", async () => {
+  const signoutButton = document.getElementById('signout');
+  signoutButton?.addEventListener('click', async () => {
     try {
-      const response = await fetch("/api/auth/signout", {
-        method: "POST",
+      const response = await fetch('/api/auth/signout', {
+        method: 'POST',
       });
 
       if (response.ok) {
-        window.location.href = "/";
+        window.location.href = '/';
       }
     } catch (error) {
-      console.error("Failed to sign out:", error);
+      console.error('Failed to sign out:', error);
     }
   });
 </script>
