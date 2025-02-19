@@ -15,11 +15,12 @@
   interface Props extends HTMLFormAttributes {
     onVerifySuccess?: (data: OTPVerifyResponse) => void;
     email?: string;
+    token?: string;
   }
 
-  let {onVerifySuccess, email, ...formProps}: Props = $props();
+  let {onVerifySuccess, email, token, ...formProps}: Props = $props();
 
-  let otp = $state("");
+  let otp = $state(token ?? "");
   let error = $state<string | null>(null);
   let isLoading = $state(false);
   let isSuccess = $state(false);
@@ -84,7 +85,7 @@
   {:else}
     {#if email}
       <div class="mb-4 p-3 bg-blue-100 text-blue-700 rounded">
-        <p>Please enter the verification code sent to:</p>
+        <p>Please confirm the verification code sent to:</p>
         <p class="font-medium">{email}</p>
       </div>
     {/if}
@@ -100,8 +101,6 @@
         class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-center tracking-widest font-mono text-lg"
         placeholder="000000"
         maxlength="6"
-        pattern="\d{6}"
-        inputmode="numeric"
         required
         aria-invalid={otp ? !isOTPValid : undefined}
         aria-describedby={otp && !isOTPValid ? "otp-error" : undefined}
@@ -124,7 +123,7 @@
         >
         Verifying...
       {:else}
-        Verify Email
+        Verify
       {/if}
     </button>
   {/if}
