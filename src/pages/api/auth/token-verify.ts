@@ -25,7 +25,7 @@ export const POST: APIRoute = async ({request, cookies}) => {
     const {data: verifyData, error: verifyError} =
       await supabaseAdmin.auth.verifyOtp({
         token_hash: access_token,
-        type: "magiclink",
+        type: "email",
       });
 
     if (verifyError) {
