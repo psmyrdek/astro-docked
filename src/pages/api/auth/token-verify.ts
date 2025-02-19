@@ -4,14 +4,13 @@ import {supabaseAdmin} from "../../../lib/supabase";
 export const POST: APIRoute = async ({request, cookies}) => {
   try {
     const data = await request.json();
-    const {access_token} = data;
+    const {token, email} = data;
 
-    // Validate input
-    if (!access_token) {
-      console.error("Missing access token in request");
+    if (!token || !email) {
+      console.error("Missing OTP token or email in request");
       return new Response(
         JSON.stringify({
-          error: "Access token is required",
+          error: "OTP token and email are required",
         }),
         {
           status: 400,
@@ -22,10 +21,10 @@ export const POST: APIRoute = async ({request, cookies}) => {
       );
     }
 
-    // Verify OTP token
     const {data: verifyData, error: verifyError} =
       await supabaseAdmin.auth.verifyOtp({
-        token_hash: access_token,
+        token,
+        email,
         type: "email",
       });
 

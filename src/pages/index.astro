@@ -1,9 +1,6 @@
 ---
-import "../styles/global.css";
-
 import Layout from "../layouts/Layout.astro";
 import Auth from "../components/Auth.svelte";
-import TokenAuth from "../components/TokenAuth.svelte";
 import type {SignInResponse} from "../components/SignInForm.svelte";
 import type {SignUpResponse} from "../components/SignUpForm.svelte";
 ---
@@ -12,13 +9,6 @@ import type {SignUpResponse} from "../components/SignUpForm.svelte";
   <main class='container mx-auto px-4 py-8'>
     <h1 class='text-4xl font-bold text-center mb-8'>Welcome</h1>
 
-    <TokenAuth
-      client:load
-      onAuthSuccess={(data: {user: any; message: string}) => {
-        console.log("User authenticated:", data.user);
-        window.location.href = "/home";
-      }}
-    />
     <Auth
       client:load
       onAuthSuccess={(data: SignInResponse | SignUpResponse) => {
