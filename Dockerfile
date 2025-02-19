@@ -3,7 +3,7 @@ FROM node:20-slim
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY . .
 
@@ -21,7 +21,7 @@ ENV JWT_SECRET=$JWT_SECRET
 ENV HOST=0.0.0.0
 ENV PORT=8080
 
-RUN npm run build
+RUN npm run build && npm run db:migrate
 
 EXPOSE 8080
 
