@@ -4,13 +4,13 @@ import {supabaseAdmin} from "../../../lib/supabase";
 export const POST: APIRoute = async ({request, cookies}) => {
   try {
     const data = await request.json();
-    const {access_token, refresh_token, expires_in, expires_at} = data;
+    const {access_token, type} = data;
 
     // Validate input
-    if (!access_token || !refresh_token) {
+    if (!access_token) {
       return new Response(
         JSON.stringify({
-          error: "Access token and refresh token are required",
+          error: "Access token is required",
         }),
         {
           status: 400,
@@ -21,15 +21,17 @@ export const POST: APIRoute = async ({request, cookies}) => {
       );
     }
 
-    // Verify the token by getting the user
-    const {data: userData, error: userError} = await supabaseAdmin.auth.getUser(
-      access_token
-    );
+    // Verify OTP token
+    const {data: verifyData, error: verifyError} =
+      await supabaseAdmin.auth.verifyOtp({
+        token_hash: access_token,
+        type: type || "email",
+      });
 
-    if (userError) {
+    if (verifyError) {
       return new Response(
         JSON.stringify({
-          error: userError.message,
+          error: verifyError.message,
         }),
         {
           status: 400,
@@ -40,8 +42,23 @@ export const POST: APIRoute = async ({request, cookies}) => {
       );
     }
 
-    // Set the session cookies
-    cookies.set("sb-access-token", access_token, {
+    // Set the session cookies using the verified session
+    const session = verifyData.session;
+    if (!session) {
+      return new Response(
+        JSON.stringify({
+          error: "No session returned from verification",
+        }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    cookies.set("sb-access-token", session.access_token, {
       path: "/",
       httpOnly: true,
       secure: import.meta.env.PROD,
@@ -49,7 +66,7 @@ export const POST: APIRoute = async ({request, cookies}) => {
       maxAge: 60 * 60 * 24 * 7, // 1 week
     });
 
-    cookies.set("sb-refresh-token", refresh_token, {
+    cookies.set("sb-refresh-token", session.refresh_token, {
       path: "/",
       httpOnly: true,
       secure: import.meta.env.PROD,
@@ -59,8 +76,8 @@ export const POST: APIRoute = async ({request, cookies}) => {
 
     return new Response(
       JSON.stringify({
-        user: userData.user,
-        message: "Successfully verified token!",
+        user: session.user,
+        message: "Successfully verified token and created session!",
       }),
       {
         status: 200,

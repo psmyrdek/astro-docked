@@ -1,6 +1,13 @@
 <!-- A component for displaying authentication errors from URL parameters -->
 <script lang="ts">
   import {onMount} from "svelte";
+  import type {HTMLAttributes} from "svelte/elements";
+
+  interface Props extends HTMLAttributes<HTMLDivElement> {
+    message?: string;
+  }
+
+  let {message}: Props = $props();
 
   interface AuthErrorMapping {
     [key: string]: {
@@ -38,10 +45,10 @@
       : null;
 
     // Only show if there are actual errors
-    isVisible = !!(error || errorCode || errorDescription);
+    isVisible = !!(error || errorCode || errorDescription || message);
 
     // Clean up URL if there are errors
-    if (isVisible) {
+    if (isVisible && !message) {
       const cleanUrl = window.location.pathname;
       window.history.replaceState({}, document.title, cleanUrl);
     }
@@ -90,7 +97,9 @@
       </svg>
     </button>
 
-    {#if errorDetails}
+    {#if message}
+      <p class="text-red-700">{message}</p>
+    {:else if errorDetails}
       <h3 class="text-red-800 font-semibold mb-2">{errorDetails.title}</h3>
       <p class="text-red-700">{errorDetails.description}</p>
     {:else}

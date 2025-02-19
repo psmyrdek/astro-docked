@@ -1,17 +1,18 @@
 <script lang="ts">
   import {onMount} from "svelte";
   import AuthError from "./AuthError.svelte";
+  import type {HTMLAttributes} from "svelte/elements";
 
-  export let accessToken: string;
-  export let refreshToken: string;
-  export let expiresIn: number;
-  export let expiresAt: number;
-  export let tokenType: string;
-  export let type: string;
-  export let onAuthSuccess: (data: {user: any; message: string}) => void;
+  interface Props extends HTMLAttributes<HTMLDivElement> {
+    accessToken: string;
+    type: string;
+    onAuthSuccess: (data: {user: any; message: string}) => void;
+  }
 
-  let error: string | null = null;
-  let isLoading = true;
+  let {accessToken, type, onAuthSuccess}: Props = $props();
+
+  let error = $state<string | null>(null);
+  let isLoading = $state(true);
 
   async function verifyToken() {
     try {
@@ -22,10 +23,6 @@
         },
         body: JSON.stringify({
           access_token: accessToken,
-          refresh_token: refreshToken,
-          expires_in: expiresIn,
-          expires_at: expiresAt,
-          token_type: tokenType,
           type: type,
         }),
       });
@@ -37,6 +34,7 @@
       }
 
       onAuthSuccess(data);
+      window.location.href = "/";
     } catch (e) {
       error =
         e instanceof Error

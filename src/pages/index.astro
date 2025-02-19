@@ -13,13 +13,9 @@ const hashParams = new URLSearchParams(
 );
 
 const accessToken = hashParams.get("access_token");
-const refreshToken = hashParams.get("refresh_token");
-const expiresIn = parseInt(hashParams.get("expires_in") || "0");
-const expiresAt = parseInt(hashParams.get("expires_at") || "0");
-const tokenType = hashParams.get("token_type");
 const type = hashParams.get("type");
 
-const isTokenAuth = accessToken && refreshToken && tokenType;
+const isTokenAuth = accessToken && type;
 console.log(`isTokenAuth: ${isTokenAuth}`);
 ---
 
@@ -32,10 +28,6 @@ console.log(`isTokenAuth: ${isTokenAuth}`);
         <TokenAuth
           client:load
           accessToken={accessToken || ""}
-          refreshToken={refreshToken || ""}
-          expiresIn={expiresIn}
-          expiresAt={expiresAt}
-          tokenType={tokenType || ""}
           type={type || ""}
           onAuthSuccess={(data: {user: any; message: string}) => {
             console.log("User authenticated:", data.user);
