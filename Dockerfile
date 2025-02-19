@@ -21,7 +21,7 @@ ENV JWT_SECRET=$JWT_SECRET
 ENV HOST=0.0.0.0
 ENV PORT=8080
 
-RUN npm run build && npm run db:migrate
+RUN npm run build
 
 EXPOSE 8080
 
