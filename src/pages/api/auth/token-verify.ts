@@ -8,6 +8,7 @@ export const POST: APIRoute = async ({request, cookies}) => {
 
     // Validate input
     if (!access_token) {
+      console.error("Missing access token in request");
       return new Response(
         JSON.stringify({
           error: "Access token is required",
@@ -29,6 +30,7 @@ export const POST: APIRoute = async ({request, cookies}) => {
       });
 
     if (verifyError) {
+      console.error("Error verifying OTP token:", verifyError);
       return new Response(
         JSON.stringify({
           error: verifyError.message,
@@ -45,6 +47,7 @@ export const POST: APIRoute = async ({request, cookies}) => {
     // Set the session cookies using the verified session
     const session = verifyData.session;
     if (!session) {
+      console.error("No session returned after successful OTP verification");
       return new Response(
         JSON.stringify({
           error: "No session returned from verification",
@@ -87,6 +90,7 @@ export const POST: APIRoute = async ({request, cookies}) => {
       }
     );
   } catch (error) {
+    console.error("Unexpected error in token verification:", error);
     return new Response(
       JSON.stringify({
         error: "Internal server error",
