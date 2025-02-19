@@ -9,14 +9,6 @@ const token = Astro.url.searchParams.get("token");
 
 <Layout showTopBar={false}>
   <main class='container mx-auto px-4 py-8'>
-    <OTPForm
-      email={email}
-      token={token}
-      client:load
-      onVerifySuccess={() => {
-        // Redirect to home page after successful verification
-        window.location.href = "/home";
-      }}
-    />
+    <OTPForm email={email} token={token} client:load />
   </main>
 </Layout>

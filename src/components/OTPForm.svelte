@@ -53,8 +53,7 @@
       otp = "";
       isSuccess = true;
 
-      // Notify parent of success with proper typing
-      onVerifySuccess?.(data);
+      window.location.href = "/home";
     } catch (e) {
       error = e instanceof Error ? e.message : "An unknown error occurred";
     } finally {
