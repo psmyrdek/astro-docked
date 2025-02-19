@@ -6,43 +6,25 @@ import Auth from "../components/Auth.svelte";
 import TokenAuth from "../components/TokenAuth.svelte";
 import type {SignInResponse} from "../components/SignInForm.svelte";
 import type {SignUpResponse} from "../components/SignUpForm.svelte";
-
-// Parse hash parameters if they exist
-const hashParams = new URLSearchParams(
-  Astro.url.hash ? Astro.url.hash.substring(1) : ""
-);
-
-const accessToken = hashParams.get("access_token");
-const type = hashParams.get("type");
-
-const isTokenAuth = accessToken && type;
-console.log(`isTokenAuth: ${isTokenAuth}`);
 ---
 
 <Layout showTopBar={false}>
   <main class='container mx-auto px-4 py-8'>
     <h1 class='text-4xl font-bold text-center mb-8'>Welcome</h1>
 
-    {
-      isTokenAuth ? (
-        <TokenAuth
-          client:load
-          accessToken={accessToken || ""}
-          type={type || ""}
-          onAuthSuccess={(data: {user: any; message: string}) => {
-            console.log("User authenticated:", data.user);
-            window.location.href = "/";
-          }}
-        />
-      ) : (
-        <Auth
-          client:load
-          onAuthSuccess={(data: SignInResponse | SignUpResponse) => {
-            console.log("User authenticated:", data.user);
-          }}
-        />
-      )
-    }
+    <TokenAuth
+      client:load
+      onAuthSuccess={(data: {user: any; message: string}) => {
+        console.log("User authenticated:", data.user);
+        window.location.href = "/home";
+      }}
+    />
+    <Auth
+      client:load
+      onAuthSuccess={(data: SignInResponse | SignUpResponse) => {
+        console.log("User authenticated:", data.user);
+      }}
+    />
   </main>
 </Layout>
 

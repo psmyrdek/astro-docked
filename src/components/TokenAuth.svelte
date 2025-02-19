@@ -4,15 +4,21 @@
   import type {HTMLAttributes} from "svelte/elements";
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
-    accessToken: string;
-    type: string;
     onAuthSuccess: (data: {user: any; message: string}) => void;
   }
 
-  let {accessToken, type, onAuthSuccess}: Props = $props();
+  let {onAuthSuccess}: Props = $props();
 
   let error = $state<string | null>(null);
   let isLoading = $state(true);
+  let accessToken = $state<string | null>(null);
+
+  function getHashParams() {
+    const hashParams = new URLSearchParams(
+      window.location.hash ? window.location.hash.substring(1) : ""
+    );
+    accessToken = hashParams.get("access_token");
+  }
 
   async function verifyToken() {
     try {
@@ -23,7 +29,6 @@
         },
         body: JSON.stringify({
           access_token: accessToken,
-          type: type,
         }),
       });
 
@@ -34,7 +39,7 @@
       }
 
       onAuthSuccess(data);
-      window.location.href = "/";
+      window.location.href = "/home";
     } catch (e) {
       error =
         e instanceof Error
@@ -46,14 +51,21 @@
   }
 
   onMount(() => {
-    verifyToken();
+    getHashParams();
+    if (accessToken) {
+      verifyToken();
+    } else {
+      isLoading = false;
+    }
   });
 </script>
 
-{#if isLoading}
-  <div class="flex justify-center items-center p-4">
-    <p class="text-lg">Signing you in...</p>
-  </div>
-{:else if error}
-  <AuthError message={error} />
+{#if accessToken}
+  {#if isLoading}
+    <div class="flex justify-center items-center p-4">
+      <p class="text-lg">Signing you in...</p>
+    </div>
+  {:else if error}
+    <AuthError message={error} />
+  {/if}
 {/if}

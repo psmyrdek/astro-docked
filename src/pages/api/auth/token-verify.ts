@@ -4,7 +4,7 @@ import {supabaseAdmin} from "../../../lib/supabase";
 export const POST: APIRoute = async ({request, cookies}) => {
   try {
     const data = await request.json();
-    const {access_token, type} = data;
+    const {access_token} = data;
 
     // Validate input
     if (!access_token) {
@@ -25,7 +25,7 @@ export const POST: APIRoute = async ({request, cookies}) => {
     const {data: verifyData, error: verifyError} =
       await supabaseAdmin.auth.verifyOtp({
         token_hash: access_token,
-        type: type || "email",
+        type: "magiclink",
       });
 
     if (verifyError) {
